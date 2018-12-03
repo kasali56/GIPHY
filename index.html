@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>   
+
+<head>
+  <title>The Magical Kingdom Of Been BadAss</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" src="text/css" href="asset\style.css">
+</head>
+
+<body>
+  <div id="ButtonArea"></div>
+  <form id="Search Form">
+    <label for="Search-Input">Add Label</label>
+    <input type="text" id="Search-Input"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+  <div id="searches"></div>  
+  <br> 
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script type="text/javascript">
+    var SearchArray = ['black panter', 'lawerence taylor', 'Wolf of Street','rugby','love','People','Women',];
+    function PopulateButton (SearchArray, classtoadd, areatoaddto) {     
+      $(areatoaddto).empty();
+      for (var i = 0; i < search.length; i++) {
+        var a = $('<button>');
+        a.addClass(classtoadd);
+        a.attr('data-type', SearchArray[i]);
+        a.text(SearchArray[i]);
+        $(areatoaddto).append(a);
+      }      
+    }
+    $(Document).on('click', searchbutton,function() {
+      $('#searches').empty();
+      var type = $(this).data('type');
+      console.log(type);
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
+      $.ajax({ url: queryURL, method: "GET" })
+        .done(function (response) {
+          console.log(Response);
+          for (var i = 0; i < response.data.length; i++){
+            var searchDiv = $('<div class="search-item">');
+          var rating = Response.data[i].rating;
+          var p = $('<p>').text('rating' + rating);          
+          var animate = response.data[i].images_fixed.url;
+          var still = response.data[i].images_height_still.url;
+          var image = $('<img>')
+          image.attr('src', still);
+          image.attr('data-still', still);
+          image.attr('data-animate', animate);
+          image.attr('data-state', still);
+          image.addClass('searchimage');
+          searchDiv.append(p);
+          searchDiv.append(image);
+          $('#searches').append(searchDiv);          
+          }
+        });
+        $(document).on('click',searchimage,function(){
+          var state = $(this).data('state');
+          if(state=='still'){
+            $(this).attr('src');
+          }
+        });
+
+      $("#addsearch").on('click', function () {
+        var newSearch = ('input').eq(0).val;
+        SearchArray.push(newSearch);
+        PopulateButton(SearchArray, 'searchbutton', '#buttonarea');
+        return false;
+      });      
+  </script>
+</body>
+</html>
